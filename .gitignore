@@ -1,0 +1,16 @@
+node_modules/
+dist/
+release/
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+*.pem
+*.key
+preferences.json
+training-raw.log
+*.safetensors
+*.onnx
+*.pt
+*.pth

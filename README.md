@@ -76,4 +76,3 @@ npm run dist:win
 维护：**特异人士AIGC（闲鱼）** · [GitHub](https://github.com/114514dude) · [闲鱼](https://www.goofish.com/)
 
 桌面界面与桥接层对接 [diffusion-pipe](https://github.com/tdrussell/diffusion-pipe) 训练核心，整合包来源为 [DiffPipeForge](https://github.com/TianDongL/DiffPipeForge)。依赖与模型许可见 [第三方说明](THIRD_PARTY_NOTICES.md)。源码采用 [GPL-3.0](LICENSE)。
-
