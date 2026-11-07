@@ -7,10 +7,10 @@
 Windows 桌面训练工作台 · 液态玻璃界面 · WD14 自动打标
 
 [![Windows](https://img.shields.io/badge/Windows-x64-0078D4?style=flat-square)](https://github.com/114514dude/Teyi-LoRA-Trainer/releases)
-[![Version](https://img.shields.io/badge/version-0.6.0-5B7CFA?style=flat-square)](https://github.com/114514dude/Teyi-LoRA-Trainer/releases/tag/v0.6.0)
+[![Version](https://img.shields.io/badge/version-0.6.1-5B7CFA?style=flat-square)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-GPL--3.0-24A990?style=flat-square)](LICENSE)
 
-[下载安装包](https://github.com/114514dude/Teyi-LoRA-Trainer/releases/tag/v0.6.0) · [本版更新](CHANGELOG.md) · [反馈问题](https://github.com/114514dude/Teyi-LoRA-Trainer/issues)
+[下载源码](https://github.com/114514dude/Teyi-LoRA-Trainer/archive/refs/heads/main.zip) · [本版更新](CHANGELOG.md) · [反馈问题](https://github.com/114514dude/Teyi-LoRA-Trainer/issues)
 
 ![训练器主页](docs/images/home-light.jpg)
 
@@ -32,6 +32,11 @@ Windows 桌面训练工作台 · 液态玻璃界面 · WD14 自动打标
 | ![数据集设置](docs/images/dataset.jpg) | ![WD14 自动打标](docs/images/tagger.jpg) |
 
 ![深色训练设置](docs/images/training-dark.jpg)
+
+## 0.6.1 更新
+
+- 授权引导采用白色卡片，提升请求码与输入区域的可读性。
+- 调整标题、说明与按钮对比度，简化表单背景效果。
 
 ## 0.6.0 更新
 
