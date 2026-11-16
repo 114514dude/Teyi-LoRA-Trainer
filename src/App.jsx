@@ -342,6 +342,7 @@ function HomePage({ lang, setPage, config, resolution, humanized = true }) {
     ? [['为 ', ' 准备好你的训练方案'], ['下一份灵感，交给 ', ''], ['', ' 的新旅程，从这组参数开始'], ['让 ', ' 学会你的创作风格'], ['你的创意，', ' 的下一课']]
     : [['Your ', ' training recipe'], ['Your next idea starts with ', ''], ['A fresh chapter for ', ''], ['Teach ', ' your creative style'], ['A new lesson for ', '']]
   const changelog = [
+    { version: '0.6.2', date: '2026.09', zh: '许可证改为纯文本激活，并完善每次启动的未授权引导与正版来源提示。', en: 'Switched licensing to text-only activation with a persistent startup guide and authorized-source notice.' },
     { version: '0.6.0', date: '2026.09', zh: '接入真实逐步指标、原始日志归档、CLIP Token 预检与核心能力表。', en: 'Added real per-step metrics, raw-log archives, CLIP token preflight, and core capability profiles.' },
     { version: '0.5.2', date: '2026.09', zh: '完善训练桥接、WD14 自动打标与环境诊断。', en: 'Improved the training bridge, WD14 tagging, and environment diagnostics.' },
     { version: '0.5.1', date: '2026.09', zh: '补齐浅色与深色液态玻璃界面。', en: 'Completed the light and dark liquid-glass themes.' },
@@ -1030,28 +1031,28 @@ function LicensePage({ lang, status, refresh, showToast }) {
   const [busy, setBusy] = useState(false)
   const [code, setCode] = useState('')
   const copyRequest = async () => { await navigator.clipboard?.writeText(status?.requestCode || ''); showToast(pick(lang, '机器请求码已复制。', 'Machine request code copied.')) }
-  const importLicense = async () => {
-    const selected = await desktop?.dialog?.file({ title: pick(lang, '导入许可证文件', 'Import license file'), filters: [{ name: 'License', extensions: ['lic', 'json'] }] })
-    if (!selected) return
+  const activate = async () => {
     setBusy(true)
     try {
-      const result = await desktop.license.activateFile(selected)
-      showToast(result.active ? pick(lang, '许可证已激活。', 'License activated.') : `${pick(lang, '激活失败：', 'Activation failed: ')}${result.reason}`)
-      refresh()
-    } catch (error) { showToast(`${pick(lang, '导入失败：', 'Import failed: ')}${error.message}`) } finally { setBusy(false) }
+      const result = await desktop.license.activate(code)
+      showToast(result.active ? pick(lang, '许可证已激活。', 'License activated.') : result.reason)
+      if (result.active) setCode('')
+      await refresh()
+    } catch (error) { showToast(`${pick(lang, '激活失败：', 'Activation failed: ')}${error.message}`) } finally { setBusy(false) }
   }
   return <div className="page"><PageHeader eyebrow={pick(lang, '离线授权', 'Offline licensing')} title={status?.active ? pick(lang, '许可证已激活', 'License active') : pick(lang, '激活许可证', 'Activate license')} description={pick(lang, '许可证在本机离线验证；第一次只需把机器请求码发送给授权方。', 'The license verifies locally; send the request code to the issuer once for first activation.')} />
     <GlassPanel glow className="license-card"><SectionHeading icon={BadgeCheck} title={status?.active ? pick(lang, '授权状态', 'Authorization status') : pick(lang, '机器请求码', 'Machine request code')} />
-      {status?.active ? <div className="license-active"><Check size={34}/><div><strong>{status.edition || 'commercial'}</strong><p>{pick(lang, '授权编号：', 'License ID: ')}{status.licenseId}</p><p>{pick(lang, '设备绑定与每次启动的本机密钥挑战均已通过。', 'Device binding and the per-start local-key challenge have passed.')}</p></div></div> : <><p className="license-warning">{status?.reason || pick(lang, '尚未激活。', 'Not activated.')}</p><code className="request-code">{status?.requestCode || '—'}</code><div className="panel-footer-actions"><ActionButton icon={FileCode2} onClick={copyRequest}>{pick(lang, '复制请求码', 'Copy request code')}</ActionButton><ActionButton icon={BadgeCheck} variant="primary" onClick={importLicense} disabled={busy}>{pick(lang, '导入许可证', 'Import license')}</ActionButton></div><textarea className="license-code-input" value={code} onChange={e=>setCode(e.target.value)} placeholder={pick(lang,'粘贴许可证码','Paste license code')} /><ActionButton icon={BadgeCheck} variant="primary" disabled={!code.trim()||busy} onClick={async()=>{setBusy(true);const r=await desktop.license.activate(code);setBusy(false);showToast(r.active?pick(lang,'许可证已激活。','License activated.'):r.reason);refresh()}}>{pick(lang,'验证并激活','Verify & activate')}</ActionButton></>}
+      {status?.active ? <div className="license-active"><Check size={34}/><div><strong>{status.edition || 'commercial'}</strong><p>{pick(lang, '授权编号：', 'License ID: ')}{status.licenseId}</p><p>{pick(lang, '设备绑定与每次启动的本机密钥挑战均已通过。', 'Device binding and the per-start local-key challenge have passed.')}</p></div></div> : <><p className="license-warning">{status?.reason || pick(lang, '尚未激活。', 'Not activated.')}</p><code className="request-code">{status?.requestCode || '—'}</code><div className="panel-footer-actions"><ActionButton icon={FileCode2} onClick={copyRequest}>{pick(lang, '复制请求码', 'Copy request code')}</ActionButton></div><label className="license-input-label">{pick(lang,'粘贴许可证码','Paste license code')}</label><textarea className="license-code-input" value={code} onChange={e=>setCode(e.target.value)} placeholder={pick(lang,'将授权方发来的完整许可证码直接粘贴到这里','Paste the complete license code received from the issuer')} /><ActionButton icon={BadgeCheck} variant="primary" disabled={!code.trim()||busy} onClick={activate}>{busy ? pick(lang,'正在验证…','Verifying…') : pick(lang,'验证并激活','Verify & activate')}</ActionButton><p className="license-source-notice">{pick(lang,'唯一正版来源：闲鱼「特异人士AIGC」。如果你不是从该账号获得此安装包，说明你拿到的是未经授权的转售副本，并可能已经被骗。','The only authorized source is “特异人士AIGC” on Xianyu. If you did not receive this installer from that account, you may have been sold an unauthorized copy.')}</p></>}
     </GlassPanel></div>
 }
 
 function LicenseGate({ lang, status, onOpen, onLater }) {
   const [code,setCode]=useState('')
   const [message,setMessage]=useState('')
-  const activate=async()=>{const r=await desktop?.license?.activate(code);if(r?.active){onLater();window.location.reload()}else setMessage(r?.reason||pick(lang,'许可证码无效。','Invalid license code.'))}
+  const [busy,setBusy]=useState(false)
+  const activate=async()=>{setBusy(true);setMessage('');try{const r=await desktop?.license?.activate(code);if(r?.active){onLater();window.location.reload()}else setMessage(r?.reason||pick(lang,'许可证码无效。','Invalid license code.'))}catch(error){setMessage(error?.message||pick(lang,'许可证验证失败。','License verification failed.'))}finally{setBusy(false)}}
   const copy=async()=>{await navigator.clipboard?.writeText(status?.requestCode||'');setMessage(pick(lang,'请求码已复制。','Request code copied.'))}
-  return <div className="license-gate"><GlassPanel className="license-gate__card" glow><span className="page-header__eyebrow"><BadgeCheck size={14}/> OFFLINE LICENSE</span><h1>{pick(lang,'需要许可证才能使用训练器','A license is required')}</h1><p>{pick(lang,'此设备尚未授权。复制请求码发送给授权方，再粘贴收到的许可证码。','This device is not authorized. Send the request code to the issuer, then paste the license code here.')}</p><label>{pick(lang,'请求码','Request code')}</label><div className="license-gate__request"><code>{status?.requestCode||'—'}</code><button onClick={copy}>{pick(lang,'复制','Copy')}</button></div><label>{pick(lang,'许可证码','License code')}</label><textarea value={code} onChange={e=>setCode(e.target.value)} placeholder={pick(lang,'粘贴许可证码','Paste license code')} /><div className="license-gate__actions"><ActionButton onClick={onLater}>{pick(lang,'稍后再说','Later')}</ActionButton><ActionButton icon={BadgeCheck} variant="primary" disabled={!code.trim()} onClick={activate}>{pick(lang,'验证许可证','Verify license')}</ActionButton></div>{message&&<small>{message}</small>}<button className="license-gate__link" onClick={onOpen}>{pick(lang,'也可稍后在左侧“许可证”中完成激活','You can also activate later from License in the sidebar')}</button></GlassPanel></div>
+  return <div className="license-gate"><GlassPanel className="license-gate__card" glow><span className="page-header__eyebrow"><BadgeCheck size={14}/> OFFLINE LICENSE</span><h1>{pick(lang,'这台机器尚未被认识','This machine is not recognized yet')}</h1><p>{pick(lang,'每一份许可证只回应一台真实设备。复制软件不会复制授权，复制授权也不会让另一台机器成为这台机器。验证完全在本机完成，我们不会上传你的模型、数据集或训练记录。','Each license answers to one real device. Copying the software does not copy its authorization. Verification happens entirely on this machine; your models, datasets, and training records are never uploaded.')}</p><p className="license-gate__motto">Offline by design. Licensed by intent.</p><div className="license-gate__piracy"><strong>{pick(lang,'请确认你的安装包来源','Verify where your installer came from')}</strong><span>{pick(lang,'唯一正版来源是闲鱼的「特异人士AIGC」。如果你不是从该账号获得此安装包，说明你拿到的是未经授权的转售副本，并可能已经被骗。请不要继续向转售者付款或提供机器请求码。','The only authorized source is “特异人士AIGC” on Xianyu. If you did not receive this installer from that account, you may have been sold an unauthorized copy. Do not send payment or your machine request code to the reseller.')}</span></div><label>{pick(lang,'机器请求码','Machine request code')}</label><div className="license-gate__request"><code>{status?.requestCode||'—'}</code><button onClick={copy}>{pick(lang,'复制','Copy')}</button></div><label>{pick(lang,'直接粘贴许可证码','Paste license code')}</label><textarea value={code} onChange={e=>setCode(e.target.value)} placeholder={pick(lang,'将授权方发来的完整许可证码粘贴到这里','Paste the complete license code received from the issuer')} /><div className="license-gate__actions"><ActionButton onClick={onLater}>{pick(lang,'稍后再说','Later')}</ActionButton><ActionButton icon={BadgeCheck} variant="primary" disabled={!code.trim()||busy} onClick={activate}>{busy?pick(lang,'正在验证…','Verifying…'):pick(lang,'验证并激活','Verify & activate')}</ActionButton></div>{message&&<small>{message}</small>}<button className="license-gate__link" onClick={onOpen}>{pick(lang,'稍后也可在左侧“许可证”中完成激活；未授权时训练与 WD14 保持锁定。','You can activate later from License in the sidebar; training and WD14 remain locked until then.')}</button></GlassPanel></div>
 }
 
 function App() {
@@ -1488,7 +1489,7 @@ function App() {
       </svg>
 
       <header className="titlebar">
-        <div className="titlebar__brand"><BrandMark /><strong>{t('特异人士的 LoRA 训练器', 'Exceptional LoRA Trainer')}</strong><span className="version-badge">0.5.2</span></div>
+        <div className="titlebar__brand"><BrandMark /><strong>{t('特异人士的 LoRA 训练器', 'Exceptional LoRA Trainer')}</strong><span className="version-badge">0.6.2</span></div>
         <div className="titlebar__drag" />
         <div className="titlebar__status"><span className="status-dot" />{desktop ? t('桌面后端已连接', 'Desktop bridge connected') : t('前端预览', 'Frontend preview')}</div>
         <div className="window-controls">

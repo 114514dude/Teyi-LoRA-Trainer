@@ -582,9 +582,6 @@ ipcMain.handle('tagger:start', async (_event, config) => {
 ipcMain.handle('license:status', () => licenseStatus(app.getPath('userData')))
 ipcMain.handle('license:request-code', () => ({ requestCode: licenseRequestCode(app.getPath('userData')) }))
 ipcMain.handle('license:activate', (_event, text) => activateLicense(String(text || ''), app.getPath('userData')))
-ipcMain.handle('license:activate-file', (_event, filename) => {
-  try { return activateLicense(fs.readFileSync(String(filename), 'utf8'), app.getPath('userData')) } catch (error) { return { active: false, reason: `无法读取许可证文件：${error.message}` } }
-})
 
 ipcMain.handle('tagger:stop', () => {
   if (!taggerProcess) return { success: false, message: 'WD14 当前未运行' }

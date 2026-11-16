@@ -42,7 +42,6 @@ contextBridge.exposeInMainWorld('loraDesktop', {
     status: () => ipcRenderer.invoke('license:status'),
     requestCode: () => ipcRenderer.invoke('license:request-code'),
     activate: (text) => ipcRenderer.invoke('license:activate', text),
-    activateFile: (filename) => ipcRenderer.invoke('license:activate-file', filename),
   },
   training: {
     preview: (config) => ipcRenderer.invoke('training:preview', config),

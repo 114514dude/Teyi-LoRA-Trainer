@@ -1,10 +1,7 @@
 {
   "name": "exceptional-lora-trainer",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": true,
-  "license": "GPL-3.0-only",
-  "author": "特异人士AIGC",
-  "repository": "github:114514dude/Teyi-LoRA-Trainer",
   "packageManager": "pnpm@11.19.0",
   "description": "特异人士的 LoRA 训练器 - Electron 液态玻璃前端",
   "type": "module",
@@ -65,5 +62,8 @@
       ],
       "artifactName": "Exceptional-LoRA-Trainer-${version}.${ext}"
     }
-  }
+  },
+  "license": "GPL-3.0-only",
+  "author": "特异人士AIGC",
+  "repository": "github:114514dude/Teyi-LoRA-Trainer"
 }

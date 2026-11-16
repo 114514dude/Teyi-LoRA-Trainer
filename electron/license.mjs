@@ -62,7 +62,7 @@ export function verifyLicenseObject(license, userData) {
 
 export function status(userData) {
   const { paths } = deviceKeys(userData)
-  if (!fs.existsSync(paths.license)) return { active: false, requestCode: requestCode(userData), reason: '尚未导入许可证。' }
+  if (!fs.existsSync(paths.license)) return { active: false, requestCode: requestCode(userData), reason: '尚未粘贴并激活许可证码。' }
   try {
     const result = verifyLicenseObject(JSON.parse(fs.readFileSync(paths.license, 'utf8')), userData)
     return { active: result.valid, requestCode: result.valid ? '' : requestCode(userData), ...result }
@@ -71,7 +71,9 @@ export function status(userData) {
 
 export function activate(licenseText, userData) {
   let license
-  try { license = JSON.parse(licenseText) } catch { try { license = JSON.parse(Buffer.from(String(licenseText).trim(), 'base64url').toString('utf8')) } catch { return { active: false, reason: '许可证码无效。' } } }
+  const original = String(licenseText || '').trim()
+  const compact = original.replace(/\s+/g, '')
+  try { license = JSON.parse(original) } catch { try { license = JSON.parse(Buffer.from(compact, 'base64url').toString('utf8')) } catch { return { active: false, reason: '许可证码无效，请完整复制后直接粘贴。' } } }
   const result = verifyLicenseObject(license, userData)
   if (!result.valid) return { active: false, ...result }
   const { paths } = deviceKeys(userData)

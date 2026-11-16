@@ -7,7 +7,7 @@
 Windows 桌面训练工作台 · 液态玻璃界面 · WD14 自动打标
 
 [![Windows](https://img.shields.io/badge/Windows-x64-0078D4?style=flat-square)](https://github.com/114514dude/Teyi-LoRA-Trainer/releases)
-[![Version](https://img.shields.io/badge/version-0.6.1-5B7CFA?style=flat-square)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.6.2-5B7CFA?style=flat-square)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-GPL--3.0-24A990?style=flat-square)](LICENSE)
 
 [下载源码](https://github.com/114514dude/Teyi-LoRA-Trainer/archive/refs/heads/main.zip) · [本版更新](CHANGELOG.md) · [反馈问题](https://github.com/114514dude/Teyi-LoRA-Trainer/issues)
@@ -33,6 +33,10 @@ Windows 桌面训练工作台 · 液态玻璃界面 · WD14 自动打标
 
 ![深色训练设置](docs/images/training-dark.jpg)
 
+## 0.6.2
+
+已归档 0.6.2 版桌面界面与训练桥接源码。
+
 ## 0.6.1 更新
 
 - 授权引导采用白色卡片，提升请求码与输入区域的可读性。
@@ -48,13 +52,13 @@ Windows 桌面训练工作台 · 液态玻璃界面 · WD14 自动打标
 
 ## 使用
 
-1. 在 [Releases](https://github.com/114514dude/Teyi-LoRA-Trainer/releases/tag/v0.6.0) 下载 Windows EXE。
+1. 从源码构建 Windows EXE，或使用对应版本的安装包。
 2. 将 EXE 放到原训练整合包根目录，目录结构如下。
 3. 打开应用，设置数据集、模型和训练参数，检查配置后启动训练。
 
 ```text
 训练整合包/
-├─ Exceptional-LoRA-Trainer-0.6.0.exe
+├─ Exceptional-LoRA-Trainer-0.6.2.exe
 ├─ app/backend/core/train.py
 └─ python_embeded_DP/python.exe
 ```
